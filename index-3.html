@@ -901,7 +901,7 @@ let config = {
     'मज़ेदार गणित बताइए',
   ],
   theme: {primary:'#FF6B00', secondary:'#FFB627', bg:'#FDF3E3'},
-  apiKey: 'worker',
+  'https://gyaanguru-api.scojhaa.workers.dev',
   workerUrl: 'https://gyaanguru-api.scojhaa.workers.dev',
 };
 
@@ -1140,7 +1140,7 @@ async function sendMessage() {
   loading = true;
   document.getElementById('sendBtn').disabled = true;
   input.value = ''; input.style.height = 'auto';
-  if (!config.apiKey) {
+  if (false) {
     appendMsg('guru', '⚠️ पहले Settings ⚙️ खोलें और API Key डालें! 🔑');
     loading = false;
     document.getElementById('sendBtn').disabled = false;

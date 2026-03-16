@@ -5,40 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OjhaJi GyaanGuru</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; flex-direction: column; height: 100vh; margin: 0; }
-        .header { background: #2563eb; color: white; padding: 15px; text-align: center; }
-        #chat { flex: 1; overflow-y: auto; padding: 20px; }
-        .msg { margin: 10px 0; padding: 10px; border-radius: 10px; max-width: 80%; }
-        .user { background: #dbeafe; align-self: flex-end; margin-left: auto; }
-        .ai { background: white; border: 1px solid #ddd; }
-        .input-box { padding: 20px; background: white; display: flex; gap: 10px; }
-        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        button { padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        .header { background: #1e40af; color: white; padding: 15px; text-align: center; }
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 12px; border-radius: 10px; max-width: 80%; word-wrap: break-word; }
+        .user { background: #3b82f6; color: white; align-self: flex-end; }
+        .ai { background: white; color: #1f2937; align-self: flex-start; border: 1px solid #ddd; }
+        .input-area { background: white; padding: 20px; display: flex; gap: 10px; border-top: 1px solid #ddd; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        button { background: #1e40af; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="header"><h1>OjhaJi GyaanGuru</h1></div>
-    <div id="chat"></div>
-    <div class="input-box">
-        <input type="text" id="userInput" placeholder="सवाल पूछें...">
+    <div class="header"><h2>OjhaJi GyaanGuru</h2></div>
+    <div id="chat"><div class="msg ai">नमस्ते! अब मैं लैपटॉप से अपडेट हो गया हूँ। पूछिए अपना सवाल!</div></div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="यहाँ लिखें..." onkeypress="if(event.key === 'Enter') send()">
         <button onclick="send()">भेजें</button>
     </div>
-
     <script>
         async function send() {
             const input = document.getElementById('userInput');
             const chat = document.getElementById('chat');
             const text = input.value.trim();
             if(!text) return;
-
-            chat.innerHTML += <div class="msg user">${text}</div>;
+            chat.innerHTML += `<div class="msg user">${text}</div>`;
             input.value = '';
-
             const resDiv = document.createElement('div');
             resDiv.className = 'msg ai';
-            resDiv.innerText = 'सोच रहा हूँ...';
+            resDiv.innerText = 'ओझाजी सोच रहे हैं...';
             chat.appendChild(resDiv);
-
             try {
                 const response = await fetch('https://gyaanguru2.scojhaa.workers.dev', {
                     method: 'POST',
@@ -46,10 +42,8 @@
                     body: JSON.stringify({ message: text })
                 });
                 const data = await response.json();
-                resDiv.innerText = data.response || "Error!";
-            } catch (e) {
-                resDiv.innerText = "कनेक्शन एरर!";
-            }
+                resDiv.innerText = data.response;
+            } catch (e) { resDiv.innerText = "Error: Worker से जवाब नहीं मिला।"; }
             chat.scrollTop = chat.scrollHeight;
         }
     </script>

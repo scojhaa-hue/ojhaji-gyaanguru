@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ओझाजी ज्ञानगुरु</title>
     <style>
-        body { margin: 0; font-family: sans-serif; background: #0b141a; color: white; display: flex; flex-direction: column; height: 100vh; }
-        .header { background: #202c33; padding: 15px; text-align: center; border-bottom: 1px solid #313d45; }
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px; border-radius: 8px; max-width: 80%; }
-        .user { align-self: flex-end; background: #005c4b; }
-        .ai { align-self: flex-start; background: #202c33; }
-        .input-area { padding: 10px; display: flex; gap: 5px; background: #202c33; }
-        input { flex: 1; padding: 10px; border-radius: 20px; border: none; outline: none; }
-        button { background: #00a884; border: none; color: white; padding: 10px 15px; border-radius: 50%; cursor: pointer; }
+        body { margin:0; font-family:sans-serif; background:#0b141a; color:white; display:flex; flex-direction:column; height:100vh; }
+        .header { background:#202c33; padding:15px; text-align:center; border-bottom:1px solid #313d45; }
+        #chat { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:10px; }
+        .msg { padding:12px; border-radius:10px; max-width:85%; font-size:16px; line-height:1.4; }
+        .user { align-self:flex-end; background:#005c4b; border-bottom-right-radius:0; }
+        .ai { align-self:flex-start; background:#202c33; border-bottom-left-radius:0; border: 1px solid #313d45; }
+        .input-area { padding:15px; display:flex; gap:10px; background:#202c33; }
+        input { flex:1; padding:12px; border-radius:25px; border:none; outline:none; background:#2a3942; color:white; }
+        button { background:#00a884; border:none; color:white; width:45px; height:45px; border-radius:50%; cursor:pointer; font-weight:bold; }
     </style>
 </head>
 <body>
     <div class="header"><h2>ओझाजी ज्ञानगुरु</h2></div>
-    <div id="chat"><div class="msg ai">प्रणाम! पूछो बेटा, क्या पूछना है?</div></div>
+    <div id="chat"><div class="msg ai">प्रणाम बेटा! आज ओझाजी से क्या सीखना है?</div></div>
     <div class="input-area">
-        <input type="text" id="userInput" placeholder="यहाँ लिखें...">
+        <input type="text" id="userInput" placeholder="यहाँ अपना सवाल लिखें...">
         <button onclick="send()">➤</button>
     </div>
 
@@ -36,25 +36,31 @@
             
             const loading = document.createElement('div');
             loading.className = 'msg ai';
-            loading.innerText = 'ओझाजी बोल रहे हैं...';
+            loading.innerText = 'ओझाजी हुंकार भर रहे हैं...';
             chat.appendChild(loading);
+            chat.scrollTop = chat.scrollHeight;
 
             try {
-                // सीधा Google Gemini से कनेक्शन
+                // यह 'allorigins' प्रॉक्सी सुरक्षा की दीवारों को पार कर देगी
                 const API_KEY = "AIzaSyDRjJ5LlTGauuejSVDhr-7BIiZwowbRXVg";
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "तुम अवध ओझा सर के अंदाज़ में जवाब दो। जोश के साथ हिंदी में। सवाल: " + text }] }]
+                        contents: [{ parts: [{ text: "तुम अवध ओझा सर हो। जोश और ज्ञान के साथ हिंदी में जवाब दो। सवाल: " + text }] }]
                     })
                 });
                 
-                const data = await response.json();
+                // प्रॉक्सी का डेटा हैंडल करना
+                const proxyData = await response.json();
+                const data = JSON.parse(proxyData.contents);
+                
                 const result = data.candidates[0].content.parts[0].text;
                 loading.innerText = result;
             } catch (e) {
-                loading.innerText = "नेटवर्क की दिक्कत है बेटा, फिर से पूछो।";
+                loading.innerText = "बेटा, इंटरनेट धीमा है या ओझाजी अभी गहरी सोच में हैं। एक बार फिर से बटन दबाओ!";
+                console.error(e);
             }
             chat.scrollTop = chat.scrollHeight;
         }

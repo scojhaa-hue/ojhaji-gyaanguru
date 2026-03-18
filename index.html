@@ -2,72 +2,57 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>सतीश ओझा ज्ञानगुरु</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: #b71c1c; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .app-container { width: 100%; max-width: 500px; height: 100vh; background: #fff; display: flex; flex-direction: column; box-shadow: 0 0 30px rgba(0,0,0,0.3); position: relative; }
-        .header { background: #d32f2f; color: white; padding: 18px; text-align: center; border-bottom: 4px solid #ffc107; font-weight: bold; font-size: 22px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #chat-window { flex: 1; overflow-y: auto; padding: 20px; background: #fdf2f2; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        .msg { padding: 14px 18px; border-radius: 20px; font-size: 16px; line-height: 1.6; max-width: 85%; position: relative; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .guru { align-self: flex-start; background: #ffffff; color: #333; border-left: 6px solid #ffc107; box-shadow: 2px 2px 8px rgba(0,0,0,0.08); border-bottom-left-radius: 4px; }
-        .user { align-self: flex-end; background: #d32f2f; color: white; border-bottom-right-radius: 4px; box-shadow: -2px 2px 8px rgba(211, 47, 47, 0.2); }
-        .footer { padding: 15px; background: #fff; display: flex; gap: 10px; border-top: 1px solid #eee; align-items: center; }
-        input { flex: 1; padding: 14px 20px; border: 2px solid #f0f0f0; border-radius: 30px; outline: none; font-size: 16px; transition: 0.3s; background: #f9f9f9; }
-        input:focus { border-color: #d32f2f; background: #fff; }
-        button { background: #d32f2f; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3); }
-        button:hover { background: #b71c1c; transform: scale(1.05); }
-        .loading-dots { font-style: italic; color: #888; font-size: 14px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #b71c1c; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .app-container { width: 100%; max-width: 450px; height: 95vh; background: white; display: flex; flex-direction: column; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: #d32f2f; color: white; padding: 20px; text-align: center; font-size: 22px; font-weight: bold; border-bottom: 4px solid #ffc107; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #fffcfc; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px 16px; border-radius: 15px; font-size: 16px; line-height: 1.5; max-width: 80%; }
+        .guru { background: #fce4ec; color: #333; align-self: flex-start; border-left: 5px solid #d32f2f; }
+        .user { background: #d32f2f; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .footer { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
+        button { background: #d32f2f; color: white; border: none; padding: 0 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-
 <div class="app-container">
     <div class="header">सतीश ओझा ज्ञानगुरु</div>
     <div id="chat-window">
-        <div class="msg guru"><b>सतीश जी:</b> खुश रहो बेटा! आज मन में क्या जिज्ञासा है? निसंकोच पूछो।</div>
+        <div class="msg guru"><b>सतीश जी:</b> खुश रहो बेटा! आज क्या जानना चाहते हो?</div>
     </div>
     <div class="footer">
-        <input type="text" id="userInput" placeholder="यहाँ अपना सवाल लिखें..." onkeypress="if(event.key==='Enter') send()">
-        <button onclick="send()">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
+        <input type="text" id="userInput" placeholder="यहाँ लिखें..." onkeypress="if(event.key==='Enter') send()">
+        <button onclick="send()">पूछें</button>
     </div>
 </div>
-
 <script>
     async function send() {
         const input = document.getElementById('userInput');
         const windowBox = document.getElementById('chat-window');
         const text = input.value.trim();
-        if (!text) return;
-
-        // User Message
+        if(!text) return;
         windowBox.innerHTML += `<div class="msg user"><b>आप:</b> ${text}</div>`;
         input.value = '';
+        const id = 'id' + Date.now();
+        windowBox.innerHTML += `<div class="msg guru" id="${id}"><i>सतीश जी विचार कर रहे हैं...</i></div>`;
         windowBox.scrollTop = windowBox.scrollHeight;
-
-        // Guru Loading
-        const id = 'msg-' + Date.now();
-        windowBox.innerHTML += `<div class="msg guru" id="${id}"><span class="loading-dots">सतीश जी विचार कर रहे हैं...</span></div>`;
-        windowBox.scrollTop = windowBox.scrollHeight;
-
         try {
-            const response = await fetch('https://gyaanguru-api.scojhaa.workers.dev', {
+            // हमने यहाँ URL को थोड़ा सुधारा है
+            const r = await fetch('https://gyaanguru-api.scojhaa.workers.dev/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: text })
             });
-            const data = await response.json();
-            document.getElementById(id).innerHTML = `<b>सतीश जी:</b> ${data.response}`;
+            const d = await r.json();
+            document.getElementById(id).innerHTML = `<b>सतीश जी:</b> ${d.response || d.message || "प्रणाम! मैं आपकी सेवा में हाज़िर हूँ।"}`;
         } catch (e) {
-            document.getElementById(id).innerHTML = `<span style="color:red">क्षमा करें, संपर्क में तकनीकी बाधा है। कृपया फिर से पूछें।</span>`;
+            document.getElementById(id).innerHTML = "<b>सतीश जी:</b> तकनीकी समस्या है, लेकिन मैं जल्द ही आपसे जुड़ूँगा।";
         }
         windowBox.scrollTop = windowBox.scrollHeight;
     }
 </script>
-
 </body>
 </html>

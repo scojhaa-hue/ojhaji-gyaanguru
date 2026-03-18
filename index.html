@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सतीश ओझा ज्ञानगुरु</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .chat-container { width: 100%; max-width: 450px; height: 90vh; background: white; display: flex; flex-direction: column; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 15px; overflow: hidden; }
+        .header { background: #d32f2f; color: white; padding: 20px; text-align: center; font-size: 22px; font-weight: bold; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #fffcfc; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px 16px; border-radius: 15px; font-size: 16px; line-height: 1.5; max-width: 80%; }
+        .guru { background: #fce4ec; color: #333; align-self: flex-start; border-left: 5px solid #d32f2f; }
+        .user { background: #d32f2f; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .footer { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
+        button { background: #d32f2f; color: white; border: none; padding: 0 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="header">सतीश ओझा ज्ञानगुरु</div>
+    <div id="chat-window">
+        <div class="msg guru"><b>सतीश जी:</b> खुश रहो बेटा! आज मन में क्या जिज्ञासा है?</div>
+    </div>
+    <div class="footer">
+        <input type="text" id="userInput" placeholder="यहाँ लिखें..." onkeypress="if(event.key==='Enter') send()">
+        <button onclick="send()">पूछें</button>
+    </div>
+</div>
+<script>
+    async function send() {
+        const input = document.getElementById('userInput');
+        const windowBox = document.getElementById('chat-window');
+        const text = input.value.trim();
+        if(!text) return;
+        windowBox.innerHTML += `<div class="msg user"><b>आप:</b> ${text}</div>`;
+        input.value = '';
+        const id = 'id' + Date.now();
+        windowBox.innerHTML += `<div class="msg guru" id="${id}"><i>सतीश जी विचार कर रहे हैं...</i></div>`;
+        windowBox.scrollTop = windowBox.scrollHeight;
+        try {
+            const r = await fetch('https://gyaanguru-api.scojhaa.workers.dev', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            const d = await r.json();
+            document.getElementById(id).innerHTML = `<b>सतीश जी:</b> ${d.response}`;
+        } catch (e) {
+            document.getElementById(id).innerHTML = "नेटवर्क में कुछ समस्या है, कृपया दोबारा प्रयास करें।";
+        }
+        windowBox.scrollTop = windowBox.scrollHeight;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>ओझा जी का GyaanGuru</title>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="GyaanGuru"/>
+  <meta name="theme-color" content="#92400e"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon.png"/>
+  <link rel="icon" href="icon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--sf:#b45309;--sfd:#92400e;--sfl:#d97706;--gd:#f59e0b;--cr:#fffbf0;--wh:#fff;--t1:#1f2937;--t2:#374151;--mu:#9ca3af;--br:#e5e7eb}
+    html,body{height:100%;overflow:hidden;background:#7c3500;font-family:'Noto Sans Devanagari','Segoe UI',sans-serif}
+    #app{max-width:430px;margin:0 auto;height:100vh;background:var(--cr);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,.35)}
+    .hdr{background:linear-gradient(135deg,#7c3500,#b45309 55%,#d97706);padding:14px 18px 20px;border-radius:0 0 28px 28px;box-shadow:0 6px 24px rgba(124,53,0,.45);flex-shrink:0}
+    .hdr-in{display:flex;align-items:center;gap:13px}
+    .hdr-ic{width:52px;height:52px;border-radius:15px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+    .hdr-t{color:#fff;font-weight:800;font-size:1.1rem;line-height:1.25}
+    .hdr-s{color:rgba(255,255,255,.85);font-size:.75rem;margin-top:3px}
+    .tabs{display:flex;background:#fff;border-bottom:2px solid var(--br);flex-shrink:0}
+    .tab{flex:1;padding:10px 4px 8px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:.7rem;font-weight:600;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .15s}
+    .tab .ti{font-size:1.1rem}
+    .tab.on{color:var(--sf)}
+    .tbar{height:3px;width:28px;border-radius:2px;background:transparent;margin-top:2px}
+    .tab.on .tbar{background:var(--sf)}
+    .scr{flex:1;overflow-y:auto;padding:14px 13px;-webkit-overflow-scrolling:touch}
+    .scr::-webkit-scrollbar{display:none}
+    .card{background:#fff;border-radius:16px;padding:13px 13px 15px;margin-bottom:13px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+    .ct{font-weight:700;color:var(--t2);font-size:.86rem;margin-bottom:9px}
+    .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .sb{padding:9px 2px;border-radius:11px;border:2px solid var(--br);background:#fff;cursor:pointer;font-size:.66rem;font-weight:500;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;font-family:inherit}
+    .sb .si{font-size:1.2rem}
+    .sb.on{border-color:var(--sf);background:#fff3cd;color:var(--sfd);font-weight:700}
+    .gw{display:flex;gap:7px;flex-wrap:wrap}
+    .gb{padding:6px 11px;border-radius:20px;border:2px solid var(--br);background:#fff;color:var(--mu);font-weight:500;font-size:.76rem;cursor:pointer;transition:all .15s;font-family:inherit}
+    .gb.on{background:var(--sf);border-color:var(--sf);color:#fff;font-weight:700}
+    input,textarea{width:100%;padding:12px 13px;border:2px solid var(--br);border-radius:12px;font-size:.91rem;background:#fdfdfd;color:var(--t1);font-family:inherit;outline:none;transition:border-color .2s}
+    input:focus,textarea:focus{border-color:var(--sf);background:#fff}
+    textarea{resize:vertical;line-height:1.6}
+    .mt{display:flex;gap:8px;margin-bottom:11px}
+    .mb{flex:1;padding:10px 5px;border-radius:12px;border:2px solid var(--br);background:#fff;color:var(--mu);font-weight:500;font-size:.79rem;cursor:pointer;transition:all .15s;font-family:inherit}
+    .mb.on{border-color:var(--sf);background:#fff3cd;color:var(--sfd);font-weight:700}
+    .ur{display:flex;gap:8px;margin-bottom:9px}
+    .ub{flex:1;padding:13px 5px;border-radius:12px;border:2px dashed var(--sfl);background:var(--cr);color:var(--sf);font-weight:700;font-size:.8rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:inherit;transition:all .15s}
+    .ub:active{transform:scale(.97)}
+    .ub .ui{font-size:1.6rem}
+    .ip{position:relative;margin-top:5px}
+    .ip img{width:100%;border-radius:12px;border:2px solid var(--gd);max-height:190px;object-fit:cover;display:block}
+    .ir{position:absolute;top:7px;right:7px;background:#ef4444;color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:.78rem;display:flex;align-items:center;justify-content:center}
+    .iok{margin-top:5px;padding:5px 9px;background:#f0fdf4;border-radius:8px;color:#15803d;font-size:.74rem;font-weight:600}
+    .err{padding:10px 13px;background:#fef2f2;border:1px solid #fca5a5;border-radius:12px;color:#dc2626;font-size:.84rem;margin-bottom:11px}
+    .inf{padding:10px 13px;background:#eff6ff;border:1px solid #93c5fd;border-radius:12px;color:#1d4ed8;font-size:.84rem;margin-bottom:11px}
+    .kb{background:linear-gradient(135deg,#fef3c7,#fff8e1);border:2px solid var(--gd);border-radius:14px;padding:13px;margin-bottom:13px}
+    .kb p{font-size:.81rem;color:#92400e;margin-bottom:9px;font-weight:600;line-height:1.5}
+    .kr{display:flex;gap:8px}
+    .kr input{flex:1;font-size:.81rem;padding:9px 11px}
+    .ks{padding:9px 14px;background:var(--sf);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.81rem;cursor:pointer;font-family:inherit;white-space:nowrap}
+    .kok{text-align:center;padding:9px;background:#f0fdf4;border-radius:10px;color:#15803d;font-weight:700;font-size:.83rem;margin-bottom:13px}
+    .nb{background:linear-gradient(135deg,#e0f2fe,#f0f9ff);border:2px solid #93c5fd;border-radius:14px;padding:13px;margin-bottom:13px}
+    .nb p{font-size:.81rem;color:#1d4ed8;margin-bottom:9px;font-weight:600}
+    .nok{text-align:center;padding:9px;background:#eff6ff;border-radius:10px;color:#1d4ed8;font-weight:700;font-size:.83rem;margin-bottom:13px}
+    .btn{width:100%;padding:16px;background:linear-gradient(135deg,#7c3500,#d97706);color:#fff;border:none;border-radius:16px;font-size:1.03rem;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(124,53,0,.38);transition:all .2s;font-family:inherit}
+    .btn:disabled{background:#d1d5db;box-shadow:none;cursor:not-allowed}
+    .btn:not(:disabled):active{transform:scale(.98)}
+    .ld{text-align:center;margin-top:16px;color:var(--sf)}
+    .ld .sp{font-size:1.9rem;display:inline-block;animation:spin 1s linear infinite}
+    .ld p{margin:7px 0 0;font-size:.83rem;font-weight:600}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .rw{opacity:0;transform:translateY(20px);transition:all .5s ease}
+    .rw.show{opacity:1;transform:translateY(0)}
+    .rh{background:linear-gradient(135deg,#7c3500,#b45309);border-radius:16px 16px 0 0;padding:13px 15px;display:flex;align-items:center;gap:9px}
+    .rhi{font-size:1.45rem}
+    .rht{color:#fff;font-weight:800;font-size:.94rem}
+    .rhs{color:rgba(255,255,255,.8);font-size:.7rem;margin-top:2px}
+    .sc{background:#fffbf0;border-left:5px solid var(--gd);padding:12px 15px;font-size:1.1rem;font-weight:800;color:var(--sfd)}
+    .rs{padding:11px 15px;border-bottom:1px solid #f3f4f6}
+    .rsh{font-weight:700;font-size:.88rem;margin-bottom:4px}
+    .rs p{margin:3px 0;font-size:.85rem;line-height:1.65;color:var(--t2)}
+    .rb{width:100%;padding:13px;background:#fff;color:var(--sf);border:2px solid var(--sf);border-top:none;font-size:.94rem;font-weight:700;cursor:pointer;border-radius:0 0 16px 16px;font-family:inherit}
+    .rb:active{background:#fff3cd}
+    .qe{margin-top:11px;padding:9px 12px;background:#f0fdf4;border-radius:12px;color:#15803d;font-size:.76rem}
+    .ncg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+    .ncb{padding:10px 3px;border-radius:12px;border:2px solid var(--br);background:#fff;cursor:pointer;font-size:.71rem;font-weight:600;color:var(--t2);text-align:center;font-family:inherit;transition:all .15s}
+    .ncb.on{border-color:var(--sf);background:#fff3cd;color:var(--sfd)}
+    .cl{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+    .cb{padding:10px 13px;border-radius:10px;border:1px solid var(--br);background:#fff;cursor:pointer;font-size:.81rem;font-weight:500;color:var(--t2);text-align:left;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:7px}
+    .cb:active{border-color:var(--sf);background:#fffbf0;color:var(--sfd)}
+    .dc{background:#fff;border-radius:14px;padding:13px;margin-bottom:11px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .dt{font-weight:700;color:var(--sfd);font-size:.88rem;margin-bottom:9px;display:flex;align-items:center;gap:5px}
+    .sl{background:#fffbf0;border:2px solid var(--gd);border-radius:12px;padding:11px;word-break:break-all;font-size:.77rem;color:var(--sfd);margin-bottom:9px}
+    .cp{width:100%;padding:11px;background:var(--sf);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.84rem;cursor:pointer;font-family:inherit;margin-bottom:7px}
+    .se{background:#f9fafb;border-radius:12px;padding:11px;margin-bottom:7px;border-left:4px solid var(--sf)}
+    .sn{font-weight:700;color:var(--sfd);font-size:.84rem}
+    .sq{font-size:.77rem;color:var(--t2);margin-top:3px}
+    .ss{display:inline-block;background:#fff3cd;color:var(--sfd);font-weight:700;font-size:.73rem;padding:2px 7px;border-radius:20px;margin-top:3px}
+    .em{text-align:center;padding:28px 18px;color:var(--mu);font-size:.84rem}
+    .bn{display:flex;background:#fff;border-top:1px solid var(--br);box-shadow:0 -4px 16px rgba(0,0,0,.07);flex-shrink:0}
+    .nb2{flex:1;padding:10px 0 8px;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit}
+    .nb2 .ni{font-size:1.2rem}
+    .nb2 .nl{font-size:.64rem;font-weight:500;color:var(--mu)}
+    .nb2.on .nl{color:var(--sf);font-weight:700}
+    .ni2{width:20px;height:3px;border-radius:2px;background:var(--sf);margin-top:1px}
+    .ft{text-align:center;padding:5px;background:#fff;font-size:.62rem;color:#d1d5db}
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-in">
+      <div class="hdr-ic">&#x1FA94;</div>
+      <div>
+        <div class="hdr-t">ओझा जी का GyaanGuru</div>
+        <div class="hdr-s">AI शिक्षक &#x2022; हर उत्तर की जाँच &#x2022; NCERT Class 6-12</div>
+      </div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="tab0" onclick="gp(0)"><span class="ti">✍️</span><span>जाँच</span><div class="tbar"></div></button>
+    <button class="tab" id="tab1" onclick="gp(1)"><span class="ti">📚</span><span>NCERT</span><div class="tbar"></div></button>
+    <button class="tab" id="tab2" onclick="gp(2)"><span class="ti">👨‍🏫</span><span>Teacher</span><div class="tbar"></div></button>
+  </div>
+  <div class="scr" id="scr">
+    <div id="p0">
+      <div class="kb" id="kb"><p>🔑 एक बार <strong>Google Gemini API Key</strong> डालें!</p><div class="kr"><input type="password" id="ki" placeholder="AIzaSy... paste करें"/><button class="ks" onclick="saveKey()">Save करें</button></div></div>
+      <div class="kok" id="kok" style="display:none">✅ API Key Save है! &nbsp;<span onclick="resetKey()" style="cursor:pointer;text-decoration:underline;font-size:.73rem">बदलें?</span></div>
+      <div class="nb" id="nb"><p>👤 अपना नाम लिखें (Teacher को दिखेगा)</p><div class="kr"><input type="text" id="ni" placeholder="जैसे: Rahul Kumar"/><button class="ks" onclick="saveName()" style="background:#1d4ed8">Save करें</button></div></div>
+      <div class="nok" id="nok" style="display:none">👤 <span id="nd"></span> &nbsp;<span onclick="resetName()" style="cursor:pointer;text-decoration:underline;font-size:.73rem">बदलें?</span></div>
+      <div class="card"><div class="ct">📚 विषय चुनें</div><div class="sg" id="sg"></div></div>
+      <div class="card"><div class="ct">🎓 कक्षा चुनें</div><div class="gw" id="gw"></div></div>
+      <div class="card"><div class="ct">❓ प्रश्न लिखें (हिंदी या English में)</div><input type="text" id="qi" placeholder="हिंदी या English में लिखें..."/></div>
+      <div class="card"><div class="ct">✍️ उत्तर दें</div>
+        <div class="mt"><button class="mb on" id="mt" onclick="sm('text')">⌨️ टाइप करें</button><button class="mb" id="mi" onclick="sm('image')">📷 फोटो अपलोड</button></div>
+        <div id="ta"><textarea id="ai" rows="5" placeholder="अपना उत्तर यहाँ लिखें..."></textarea></div>
+        <div id="ia" style="display:none">
+          <div class="ur"><button class="ub" onclick="document.getElementById('ci').click()"><span class="ui">📸</span>Camera</button><button class="ub" onclick="document.getElementById('gi').click()"><span class="ui">🖼️</span>Gallery</button></div>
+          <input type="file" id="ci" accept="image/*" capture="environment" style="display:none" onchange="hi(this)"/>
+          <input type="file" id="gi" accept="image/*" style="display:none" onchange="hi(this)"/>
+          <div id="iw" style="display:none"><div class="ip"><img id="ip" src="" alt=""/><button class="ir" onclick="ri()">✕</button></div><div class="iok">✅ फोटो तैयार!</div></div>
+        </div>
+      </div>
+      <div class="err" id="eb" style="display:none"></div>
+      <button class="btn" id="sb" onclick="check()">✨ गुरु जी से जाँच कराएं</button>
+      <div class="ld" id="ld" style="display:none"><span class="sp">&#x1FA94;</span><p>ओझा जी परख रहे हैं...</p></div>
+      <div id="ra" style="display:none;margin-top:18px">
+        <div class="rw" id="rw">
+          <div class="rh"><span class="rhi">&#x1FA94;</span><div><div class="rht">ओझा जी का मूल्यांकन</div><div class="rhs" id="rm"></div></div></div>
+          <div id="rb"></div>
+          <button class="rb" onclick="reset()">🔄 नया प्रश्न आज़माएं</button>
+          <div class="qe" id="qe"></div>
+        </div>
+      </div>
+    </div>
+    <div id="p1" style="display:none">
+      <div class="card"><div class="ct">🏫 कक्षा चुनें</div><div class="ncg" id="ncg"></div></div>
+      <div class="card" id="nsc" style="display:none"><div class="ct">📖 विषय चुनें</div><div class="sg" id="nsg"></div></div>
+      <div class="card" id="ncc" style="display:none"><div class="ct" id="nct">📑 अध्याय</div><div class="cl" id="ncl"></div></div>
+      <div id="ncd" style="display:none"><div class="rw show" id="ncnt"></div></div>
+    </div>
+    <div id="p2" style="display:none">
+      <div class="dc"><div class="dt">🔗 Student Share Link</div><div class="sl" id="shl"></div><button class="cp" onclick="cl2()">📋 Link Copy करें</button><div class="inf" style="font-size:.76rem">यह link छात्रों को WhatsApp पर भेजें।</div></div>
+      <div class="dc"><div class="dt">📊 छात्रों की Activity <button onclick="lsd()" style="margin-left:auto;padding:4px 9px;background:var(--sf);color:#fff;border:none;border-radius:8px;font-size:.7rem;cursor:pointer;font-family:inherit">🔄 Refresh</button></div><div id="sl2"><div class="em">🔄 Refresh दबाएं</div></div></div>
+    </div>
+  </div>
+  <div class="bn">
+    <button class="nb2 on" id="n0" onclick="gp(0)"><span class="ni">✍️</span><span class="nl">जाँच</span><div class="ni2"></div></button>
+    <button class="nb2" id="n1" onclick="gp(1)"><span class="ni">📚</span><span class="nl">NCERT</span></button>
+    <button class="nb2" id="n2" onclick="gp(2)"><span class="ni">👨‍🏫</span><span class="nl">Teacher</span></button>
+  </div>
+  <div class="ft">© 2026 ओझा जी का GyaanGuru AI 🙏</div>
+</div>
+<script>
+const SUBJ=[{id:"science",l:"विज्ञान",i:"🔬"},{id:"math",l:"गणित",i:"📐"},{id:"hindi",l:"हिंदी",i:"📖"},{id:"history",l:"इतिहास",i:"🏛️"},{id:"geography",l:"भूगोल",i:"🌍"},{id:"english",l:"English",i:"🔤"},{id:"civics",l:"नागरिक शास्त्र",i:"⚖️"},{id:"general",l:"सामान्य ज्ञान",i:"💡"}];
+const GR=["6","7","8","9","10","11","12","प्रतियोगिता"];
+const NCERT={"6":{"विज्ञान":{i:"🔬",c:["भोजन: यह कहाँ से आता है?","भोजन के घटक","तंतु से वस्त्र तक","वस्तुओं के समूह बनाना","पदार्थों का पृथक्करण","हमारे चारों ओर के परिवर्तन","पौधों को जानिए","शरीर में गति","सजीव और उनका परिवेश","गति एवं दूरियों का मापन","प्रकाश - छायाएँ एवं परावर्तन","विद्युत तथा परिपथ","चुम्बकों द्वारा मनोरंजन","जल","वायु के गुण","कचरा - संग्रहण एवं निपटान"]},"गणित":{i:"📐",c:["अपनी संख्याओं की जानकारी","पूर्ण संख्याएँ","संख्याओं के साथ खेलना","आधारभूत ज्यामितीय अवधारणाएँ","प्रारंभिक आकारों को समझना","पूर्णांक","भिन्न","दशमलव","आँकड़ों का प्रबंधन","क्षेत्रमिति","बीजगणित","अनुपात और समानुपात","सममिति","प्रायोगिक ज्यामिति"]},"हिंदी":{i:"📖",c:["वह चिड़िया जो","बचपन","नादान दोस्त","चाँद से थोड़ी सी गप्पें","अक्षरों का महत्व","पार नज़र के","साथी हaथ बढ़ाना","ऐसे-ऐसे","टिकट अलबम","झाँसी की रानी","जो देखकर भी नहीं देखते","संसार पुस्तक है","मैं सबसे छोटी होऊँ","लोकगीत","नौकर","वन के मार्ग में"]}},"7":{"विज्ञान":{i:"🔬",c:["पादपों में पोषण","प्राणियों में पोषण","रेशों से वस्त्र तक","ऊष्मा","अम्ल, क्षारक और लवण","भौतिक एवं रासायनिक परिवर्तन","मौसम, जलवायु तथा अनुकूलन","पवन, तूफान और चक्रवात","मृदा","जीवों में श्वसन","जंतुओं और पादप में परिवहन","पादप में जनन","गति एवं समय","विद्युत धारा और इसके प्रभाव","प्रकाश","जल: एक बहुमूल्य संसाधन","वन: हमारी जीवन रेखा","अपशिष्ट जल की कहानी"]},"गणित":{i:"📐",c:["पूर्णांक","भिन्न एवं दशमलव","आँकड़ों का प्रबंधन","सरल समीकरण","रेखाएँ एवं कोण","त्रिभुज और उसके गुण","त्रिभुजों की सर्वांगसमता","राशियों की तुलना","परिमेय संख्याएँ","प्रायोगिक ज्यामिति","परिमाप और क्षेत्रफल","बीजीय व्यंजक","घातांक और घात","सममिति","ठोस आकारों का चित्रण"]},"हिंदी":{i:"📖",c:["हम पंछी उन्मुक्त গগন के","दादी माँ","हिमालय की बेटियाँ","कठपुतली","मिठाईवाला","रक्त और हमारा शरीर","पापा खो गए","शाम एक किसान","चिड़िया की बच्ची","अपूर्व अनुभव","रहीम के दोहे","कंचा","एक तिनका","खानपान की बदलती तसवीर","नीलकंठ","भोर और बरखा","वीर कुँवर सिंह"]}},"8":{"विज्ञान":{i:"🔬",c:["फसल उत्पादन और प्रबंध","सूक्ष्मजीव: मित्र एवं शत्रु","संश्लेषित रेशे और प्लास्टिक","धातु और अधातु","कोयला और पेट्रोलियम","दहन और ज्वाला","पौधे एवं जंतुओं का संरक्षण","कोशिका - संरचना एवं प्रकार्य","जंतुओं में जनन","किशोरावस्था की ओर","बल तथा दाब","घर्षण","ध्वनि","विद्युत धारा के रासायनिक प्रभाव","कुछ प्राकृतिक परिघटनाएँ","प्रकाश","तारे एवं सौर परिवार","वायु तथा जल का प्रदूषण"]},"गणित":{i:"📐",c:["परिमेय संख्याएँ","एक चर वाले रैखिक समीकरण","चतुर्भुज को समझना","प्रायोगिक ज्यामिति","आँकड़ों का प्रबंधन","वर्ग और वर्गमूल","घन और घनमूल","राशियों की तुलना","बीजीय व्यंजक एवं सर्वसमिकाएँ","ठोस आकारों का चित्रण","क्षेत्रमिति","घातांक और घात","सीधा और प्रतिलोम समानुपात","गुणनखंडन","आलेखों से परिचय","संख्याओं के साथ खेलना"]},"हिंदी":{i:"📖",c:["ध्वनि","लाख की चूड़ियाँ","बस की यात्रा","दीवानों की हस्ती","चिट्ठियों की अनूठी दुनिया","भगवान के डाकिए","क्या निराश हुआ जाए","यह सबसे कठिन समय नहीं","कबीर की साखियाँ","कामचोर","जब सिनेमा ने बोलना सीखा","सुदामा चरित","जहाँ पहिया है","अकबरी लोटा","सूर के पद","पानी की कहानी","बाज और साँप","टोपी"]}},"9":{"विज्ञान":{i:"🔬",c:["हमारे आस-पास के पदार्थ","क्या हमारे आस-पास के पदार्थ शुद्ध हैं","परमाणु एवं अणु","परमाणु की संरचना","जीवन की मौलिक इकाई","ऊतक","जीवों में विविधता","गति","बल तथा गति के नियम","गुरुत्वाकर्षण","कार्य तथा ऊर्जा","ध्वनि","हम बीमार क्यों होते हैं","प्राकृतिक सम्पदा","खाद्य संसाधनों में सुधार"]},"गणित":{i:"📐",c:["संख्या पद्धति","बहुपद","निर्देशांक ज्यामिति","दो चरों वाले रैखिक समीकरण","यूक्लिड की ज्यामिति","रेखाएँ और कोण","त्रिभुज","चतुर्भुज","समांतर चतुर्भुजों और त्रिभुजों के क्षेत्रफल","वृत्त","रचनाएँ","हीरोन का सूत्र","पृष्ठीय क्षेत्रफल और आयतन","सांख्यिकी","प्रायिकता"]},"हिंदी":{i:"📖",c:["दो बैलों की कथा","ल्हासा की ओर","उपभोक्तावाद की संस्कृति","साँवले सपनों की याद","नाना साहब की पुत्री","प्रेमचंद के फटे जूते","मेरे बचपन के दिन","एक कुत्ता और एक मैना","इस जल प्रलय में","रैदास के पद","अग्निपथ","नए इलाके में"]},"इतिहास":{i:"🏛️",c:["फ्रांसीसी क्रांति","यूरोप में समाजवाद और रूसी क्रांति","नात्सीवाद और हिटलर का उदय","वन्य समाज और उपनिवेशवाद","आधुनिक विश्व में चरवाहे","किसान और काश्तकार","इतिहास और खेल","वस्त्र एक सामाजिक इतिहास"]}},"10":{"विज्ञान":{i:"🔬",c:["रासायनिक अभिक्रियाएँ और समीकरण","अम्ल, क्षारक और लवण","धातु और अधातु","कार्बन एवं उसके यौगिक","तत्वों का आवर्त वर्गीकरण","जैव प्रक्रम","नियंत्रण एवं समन्वय","जीव जनन कैसे करते हैं","अनुवांशिकता एवं विकास","प्रकाश - परावर्तन तथा अपवर्तन","मानव नेत्र तथा रंगबिरंगा संसार","विद्युत","विद्युत धारा के चुम्बकीय प्रभाव","ऊर्जा के स्रोत","हमारा पर्यावरण","प्राकृतिक संसाधनों का प्रबंधन"]},"गणित":{i:"📐",c:["वास्तविक संख्याएँ","बहुपद","दो चर वाले रैखिक समीकरणों का युग्म","द्विघात समीकरण","समांतर श्रेढ़ियाँ","त्रिभुज","निर्देशांक ज्यामिति","त्रिकोणमिति का परिचय","त्रिकोणमिति के कुछ अनुप्रयोग","वृत्त","रचनाएँ","वृत्तों से संबंधित क्षेत्रफल","पृष्ठीय क्षेत्रफल और आयतन","सांख्यिकी","प्रायिकता"]},"हिंदी":{i:"📖",c:["सूरदास के पद","राम-लक्ष्मण-परशुराम संवाद","सवैया और कवित्त","आत्मकथ्य","उत्साह और अट नहीं रही","यह दंतुरहित मुस्कान","छाया मत छूना","कन्यादान","संगतकार","नेताजी का चश्मा","बालगोबिन भगत","लखनवी अंदाज़","मानवीय करुणा की दिव्या चमक","एक कहानी यह भी","स्त्री शिक्षा के विरोधी कुतर्कों का खंडन","नौबतखाने में इबादत","संस्कृति"]},"इतिहास":{i:"🏛️",c:["यूरोप में राष्ट्रवाद का उदय","भारत में राष्ट्रवाद","भूमंडलीकृत विश्व का बनना","औद्योगीकरण का युग","मुद्रण संस्कृति और आधुनिक दुनिया"]},"भूगोल":{i:"🌍",c:["संसाधन और विकास","वन और वन्य जीव संसाधन","जल संसाधन","कृषि","खनिज और ऊर्जा संसाधन","विनिर्माण उद्योग","राष्ट्रीय अर्थव्यवस्था की जीवन रेखाएँ"]}},"11":{"भौतिकी":{i:"⚛️",c:["भौतिक जगत","मात्रक और मापन","सरल रेखा में गति","समतल में गति","गति के नियम","कार्य, ऊर्जा और शक्ति","कणों के निकाय तथा घूर्णी गति","गुरुत्वाकर्षण","ठोसों के यांत्रिक गुण","तरलों के यांत्रिक गुण","द्रव्य के तापीय गुण","ऊष्मागतिकी","अणुगति सिद्धांत","दोलन","तरंगें"]},"रसायन":{i:"🧪",c:["रसायन विज्ञान की मूल अवधारणाएँ","परमाणु की संरचना","तत्वों का वर्गीकरण","रासायनिक आबंधन","ऊष्मागतिकी","साम्यावस्था","अपचयोपचय अभिक्रियाएँ","हाइड्रोजन","s-ब्लॉक तत्व","p-ब्लॉक तत्व","कार्बनिक रसायन","हाइड्रोकार्बन","पर्यावरणीय रसायन"]},"गणित":{i:"📐",c:["समुच्चय","संबंध एवं फलन","त्रिकोणमितीय फलन","गणितीय आगमन","सम्मिश्र संख्याएँ","रैखिक असमिकाएँ","क्रमचय और संचय","द्विपद प्रमेय","अनुक्रम तथा श्रेणी","सरल रेखाएँ","शंकु परिच्छेद","त्रिविमीय ज्यामिति","सीमा और अवकलज","गणितीय विवेचन","सांख्यिकी","प्रायिकता"]}},"12":{"भौतिकी":{i:"⚛️",c:["वैद्युत आवेश तथा क्षेत्र","स्थिरवैद्युत विभव तथा धारिता","विद्युत धारा","गतिमान आवेश और चुम्बकत्व","चुम्बकत्व एवं द्रव्य","वैद्युतचुम्बकीय प्रेरण","प्रत्यावर्ती धारा","वैद्युतचुम्बकीय तरंगें","किरण प्रकाशिकी","तरंग प्रकाशिकी","विकिरण तथा द्रव्य की द्वैत प्रकृति","परमाणु","नाभिक","अर्धचालक इलेक्ट्रॉनिकी","संचार व्यवस्था"]},"रसायन":{i:"🧪",c:["ठोस अवस्था","विलयन","वैद्युतरसायन","रासायनिक बलगतिकी","पृष्ठ रसायन","तत्वों के निष्कर्षण के सिद्धांत","p-ब्लॉक तत्व","d एवं f ब्लॉक तत्व","उपसहसंयोजन यौगिक","हैलोऐल्केन तथा हैलोऐरीन","ऐल्कोहॉल, फिनॉल और ईथर","ऐल्डिहाइड, कीटोन और कार्बोक्सिलिक अम्ल","ऐमीन","जैव अणु","बहुलक","दैनिक जीवन में रसायन"]},"गणित":{i:"📐",c:["संबंध एवं फलन","प्रतिलोम त्रिकोणमितीय फलन","आव्यूह","सारणिक","सांतत्य तथा अवकलनीयता","अवकलज के अनुप्रयोग","समाकलन","समाकलन के अनुप्रयोग","अवकल समीकरण","सदिश बीजगणित","त्रिविमीय ज्यामिति","रैखिक प्रोग्रामन","प्रायिकता"]},"हिंदी":{i:"📖",c:["आत्म-परिचय / एक गीत","पतंग","कविता के बहाने","कैमरे में बंद अपाहिज","सहर्ष स्वीकारा है","उषा","बादल राग","कवितावली / लक्ष्मण मूर्च्छा","रुबाइयाँ / गज़ल","छोटा मेरा खेत / बगुलों के पंख","भक्तिन","बाज़ार दर्शन","काले मेघा पानी दे","पहलवान की ढोलक","चार्ली चैप्लिन / शिरीष के फूल","नमक","श्रम विभाजन और जाति प्रथा"]}}};
+const SK='gg_sub';
+let ss='general',sg2='10',md='text',ib64=null;
+function gk(){return localStorage.getItem('gg_key')||''}
+function saveKey(){const k=document.getElementById('ki').value.trim();if(!k){alert('Key खाली है!');return;}localStorage.setItem('gg_key',k);kst();}
+function resetKey(){localStorage.removeItem('gg_key');kst();}
+function kst(){const k=gk();document.getElementById('kb').style.display=k?'none':'block';document.getElementById('kok').style.display=k?'block':'none';}
+function gn(){return localStorage.getItem('gg_name')||''}
+function saveName(){const n=document.getElementById('ni').value.trim();if(!n){alert('नाम खाली है!');return;}localStorage.setItem('gg_name',n);nst();}
+function resetName(){localStorage.removeItem('gg_name');nst();}
+function nst(){const n=gn();document.getElementById('nb').style.display=n?'none':'block';document.getElementById('nok').style.display=n?'block':'none';if(n)document.getElementById('nd').textContent=n;}
+function blds(){const g=document.getElementById('sg');SUBJ.forEach(s=>{const b=document.createElement('button');b.className='sb'+(s.id===ss?' on':'');b.innerHTML='<span class="si">'+s.i+'</span>'+s.l;b.onclick=()=>{ss=s.id;document.querySelectorAll('#sg .sb').forEach(x=>x.classList.remove('on'));b.classList.add('on');};g.appendChild(b);});}
+function bldg(){const w=document.getElementById('gw');GR.forEach(g=>{const b=document.createElement('button');b.className='gb'+(g===sg2?' on':'');b.textContent=g==='प्रतियोगिता'?'🏆 प्रतियोगिता':'Class '+g;b.onclick=()=>{sg2=g;document.querySelectorAll('.gb').forEach(x=>x.classList.remove('on'));b.classList.add('on');};w.appendChild(b);});}
+function sm(m){md=m;document.getElementById('mt').classList.toggle('on',m==='text');document.getElementById('mi').classList.toggle('on',m==='image');document.getElementById('ta').style.display=m==='text'?'block':'none';document.getElementById('ia').style.display=m==='image'?'block':'none';}
+function hi(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{ib64=e.target.result.split(',')[1];document.getElementById('ip').src=e.target.result;document.getElementById('iw').style.display='block';};r.readAsDataURL(f);}
+function ri(){ib64=null;document.getElementById('iw').style.display='none';document.getElementById('ip').src='';document.getElementById('ci').value='';document.getElementById('gi').value='';}
+function dl(t){return /[ऀ-ॿ]/.test(t)?'h':'e';}
+function svs(nm,q,sc,subj,gr){const d=JSON.parse(localStorage.getItem(SK)||'[]');d.unshift({name:nm||'अज्ञात',question:q,score:sc,subject:subj,grade:gr,time:new Date().toLocaleString('hi-IN')});if(d.length>100)d.pop();localStorage.setItem(SK,JSON.stringify(d));}
+async function check(){
+  const key=gk();if(!key){se('पहले API Key save करें! 🔑');return;}
+  const q=document.getElementById('qi').value.trim();
+  const a=document.getElementById('ai').value.trim();
+  he();
+  if(!q){se('प्रश्न लिखना ज़रूरी है! 🙏');return;}
+  if(md==='text'&&!a){se('उत्तर लिखें या फोटो अपलोड करें! 🙏');return;}
+  if(md==='image'&&!ib64){se('फोटो अपलोड करें! 🙏');return;}
+  const subj=SUBJ.find(s=>s.id===ss);
+  const lg=dl(q);
+  document.getElementById('sb').disabled=true;
+  document.getElementById('ld').style.display='block';
+  document.getElementById('ra').style.display='none';
+  const sys=lg==='h'
+    ?'आप "ओझा जी" हैं - प्रेमपूर्ण हिंदी गुरु। सिर्फ हिंदी में जवाब दें।\nformat:\n⭐ अंक: X/10\n✅ क्या सही किया:\n📝 क्या सुधार होना चाहिए:\n💡 सही/पूरा उत्तर:\n🌟 गुरु जी का संदेश:'
+    :'You are "Ojha Ji" - caring AI teacher. Reply only in English.\nformat:\n⭐ Score: X/10\n✅ What was correct:\n📝 What needs improvement:\n💡 Complete correct answer:\n🌟 Message from Ojha Ji:';
+  const ctx=lg==='h'?'विषय: '+subj.l+' | कक्षा: '+sg2+'\nप्रश्न: '+q+(md==='image'?'\nछात्र ने image में उत्तर दिया।':'\nछात्र का उत्तर: '+a)
+    :'Subject: '+subj.l+' | Class: '+sg2+'\nQuestion: '+q+(md==='image'?'\nAnswer is in the image.':'\nStudent answer: '+a);
+  const parts=md==='image'&&ib64?[{inline_data:{mime_type:'image/jpeg',data:ib64}},{text:sys+'\n'+ctx}]:[{text:sys+'\n'+ctx}];
+  try{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}]})});
+    const data=await res.json();
+    if(data.error){se('API Error: '+data.error.message);return;}
+    const txt=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    const sm2=txt.match(/[⭐]\s*(?:अंक|Score)\s*:\s*(\d+)/);
+    svs(gn(),q,sm2?sm2[1]+'/10':'—',subj.l,sg2);
+    shr(txt,q,subj,sg2,lg);
+  }catch(e){se('नेटवर्क समस्या। Internet check करें। 🙏');}
+  finally{document.getElementById('sb').disabled=false;document.getElementById('ld').style.display='none';}
+}
+const SC={'✅':{bg:'#f0fdf4',bd:'#22c55e',hd:'#15803d'},'📝':{bg:'#fff7ed',bd:'#f97316',hd:'#c2410c'},'💡':{bg:'#eff6ff',bd:'#3b82f6',hd:'#1d4ed8'},'🌟':{bg:'#fefce8',bd:'#eab308',hd:'#854d0e'}};
+function shr(text,q,subj,gr,lg){
+  const lines=text.split('\n');let html='',inS=false;
+  lines.forEach(raw=>{const l=raw.trim();if(!l)return;
+    if(l.startsWith('⭐')){if(inS){html+='</div>';inS=false;}html+='<div class="sc">'+l+'</div>';}
+    else if(['✅','📝','💡','🌟'].some(e=>l.startsWith(e))){if(inS)html+='</div>';const c=SC[l[0]]||{bg:'#f9fafb',bd:'#9ca3af',hd:'#374151'};html+='<div class="rs" style="background:'+c.bg+';border-left:4px solid '+c.bd+'"><div class="rsh" style="color:'+c.hd+'">'+l+'</div>';inS=true;}
+    else if(inS){html+='<p>'+l+'</p>';}
+  });
+  if(inS)html+='</div>';
+  document.getElementById('rb').innerHTML=html;
+  document.getElementById('rm').textContent=subj.i+' '+subj.l+' • Class '+gr+' • '+(lg==='h'?'हिंदी':'English');
+  document.getElementById('qe').innerHTML=(lg==='h'?'💬 प्रश्न: ':'💬 Q: ')+'<em>'+q+'</em>';
+  document.getElementById('ra').style.display='block';
+  setTimeout(()=>document.getElementById('rw').classList.add('show'),60);
+  document.getElementById('scr').scrollTop=9999;
+}
+function bldnc(){const g=document.getElementById('ncg');['6','7','8','9','10','11','12'].forEach(c=>{const b=document.createElement('button');b.className='ncb';b.textContent='Class '+c;b.onclick=()=>{document.querySelectorAll('.ncb').forEach(x=>x.classList.remove('on'));b.classList.add('on');bldns(c);document.getElementById('ncc').style.display='none';document.getElementById('ncd').style.display='none';};g.appendChild(b);});}
+function bldns(cls){const data=NCERT[cls];if(!data)return;const g=document.getElementById('nsg');g.innerHTML='';Object.keys(data).forEach(s=>{const b=document.createElement('button');b.className='sb';b.innerHTML='<span class="si">'+data[s].i+'</span>'+s;b.onclick=()=>{document.querySelectorAll('#nsg .sb').forEach(x=>x.classList.remove('on'));b.classList.add('on');bldch(cls,s);};g.appendChild(b);});document.getElementById('nsc').style.display='block';}
+function bldch(cls,subj){const ch=NCERT[cls][subj].c;const l=document.getElementById('ncl');l.innerHTML='';document.getElementById('nct').textContent='📑 '+subj+' — Class '+cls;ch.forEach((c,i)=>{const b=document.createElement('button');b.className='cb';b.innerHTML='<span style="font-weight:800;color:var(--sfd);min-width:22px">'+(i+1)+'.</span>'+c;b.onclick=()=>ldc(cls,subj,c,i+1);l.appendChild(b);});document.getElementById('ncc').style.display='block';document.getElementById('ncd').style.display='none';}
+async function ldc(cls,subj,ch,num){
+  const key=gk();if(!key){alert('पहले API Key save करें!');return;}
+  const card=document.getElementById('ncd'),ct=document.getElementById('ncnt');
+  ct.innerHTML='<div style="text-align:center;padding:28px;color:var(--sf)"><div style="font-size:1.9rem;animation:spin 1s linear infinite;display:inline-block">🪔</div><p style="margin-top:10px;font-weight:600">लोड हो रहा है...</p></div>';
+  card.style.display='block';document.getElementById('scr').scrollTop=9999;
+  try{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'NCERT Class '+cls+', '+subj+', Chapter '+num+': "'+ch+'" हिंदी में समझाएं।\n\n📖 अध्याय '+num+': '+ch+'\n\n🎯 मुख्य बिंदु:\n[5-6 बुलेट points]\n\n📝 विस्तृत व्याख्या:\n[150 words]\n\n💡 महत्वपूर्ण परिभाषाएँ:\n[key terms]\n\n❓ संभावित परीक्षा प्रश्न:\n[3-4 questions]\n\n⭐ याद रखने योग्य तथ्य:\n[3-4 facts]'}]}]})});
+    const data=await res.json();
+    if(data.error){ct.innerHTML='<div style="padding:18px;color:#dc2626">Error: '+data.error.message+'</div>';return;}
+    const txt=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    ct.innerHTML='<div style="background:linear-gradient(135deg,#7c3500,#b45309);border-radius:16px 16px 0 0;padding:13px 15px;display:flex;align-items:center;gap:9px"><span style="font-size:1.45rem">📖</span><div><div style="color:#fff;font-weight:800;font-size:.94rem">'+ch+'</div><div style="color:rgba(255,255,255,.8);font-size:.7rem">'+subj+' • Class '+cls+'</div></div></div><div style="background:#fff;padding:15px;border-radius:0 0 16px 16px;box-shadow:0 4px 12px rgba(0,0,0,.08)">'+fc(txt)+'</div><button onclick="gp(0)" style="width:100%;margin-top:9px;padding:13px;background:linear-gradient(135deg,#7c3500,#d97706);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit">✍️ इस अध्याय से जाँच करें</button>';
+  }catch(e){ct.innerHTML='<div style="padding:18px;color:#dc2626">नेटवर्क समस्या।</div>';}
+}
+function fc(text){return text.split('\n').map(line=>{const t=line.trim();if(!t)return '<br/>';if(['📖','🎯','📝','💡','❓','⭐'].some(e=>t.startsWith(e)))return '<div style="font-weight:800;color:var(--sfd);font-size:.9rem;margin:11px 0 5px">'+t+'</div>';if(t.startsWith('-')||t.startsWith('•'))return '<div style="padding:3px 0 3px 11px;color:var(--t2);font-size:.84rem;border-left:3px solid var(--gd);margin:3px 0">'+t.substring(1).trim()+'</div>';return '<p style="font-size:.84rem;line-height:1.65;color:var(--t2);margin:3px 0">'+t+'</p>';}).join('');}
+function std(){document.getElementById('shl').textContent=window.location.href.split('?')[0];}
+function cl2(){const l=document.getElementById('shl').textContent;navigator.clipboard.writeText(l).then(()=>alert('✅ Link copy हो गया! WhatsApp पर share करें।')).catch(()=>{const el=document.createElement('textarea');el.value=l;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('✅ Copy हो गया!');});}
+function lsd(){const d=JSON.parse(localStorage.getItem(SK)||'[]');const l=document.getElementById('sl2');if(!d.length){l.innerHTML='<div class="em">📭 अभी कोई activity नहीं।</div>';return;}l.innerHTML=d.map(x=>'<div class="se"><div class="sn">👤 '+x.name+'</div><div class="sq">❓ '+x.question+'</div><div style="display:flex;gap:7px;align-items:center;margin-top:3px;flex-wrap:wrap"><span class="ss">⭐ '+x.score+'</span><span style="font-size:.71rem;color:var(--mu)">'+x.subject+' • Class '+x.grade+'</span><span style="font-size:.71rem;color:var(--mu)">'+x.time+'</span></div></div>').join('');}
+function gp(n){[0,1,2].forEach(i=>{document.getElementById('p'+i).style.display=i===n?'block':'none';document.getElementById('tab'+i).classList.toggle('on',i===n);document.getElementById('n'+i).classList.toggle('on',i===n);let ind=document.getElementById('n'+i).querySelector('.ni2');if(i===n&&!ind){ind=document.createElement('div');ind.className='ni2';document.getElementById('n'+i).appendChild(ind);}if(i!==n&&ind)ind.remove();});document.getElementById('scr').scrollTop=0;if(n===2)std();}
+function se(m){const b=document.getElementById('eb');b.textContent=m;b.style.display='block';}
+function he(){document.getElementById('eb').style.display='none';}
+function reset(){document.getElementById('qi').value='';document.getElementById('ai').value='';ri();sm('text');he();document.getElementById('rw').classList.remove('show');document.getElementById('ra').style.display='none';}
+blds();bldg();bldnc();kst();nst();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>

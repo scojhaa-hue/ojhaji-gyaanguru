@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#92400e"/>
+  <rect width="512" height="512" rx="100" fill="url(#grad)"/>
+  <defs>
+    <radialGradient id="grad" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#7c3500"/>
+    </radialGradient>
+  </defs>
+  <!-- Diya flame outer -->
+  <ellipse cx="256" cy="195" rx="38" ry="55" fill="#fbbf24" opacity="0.4"/>
+  <!-- Diya flame inner -->
+  <ellipse cx="256" cy="200" rx="22" ry="40" fill="#fef08a"/>
+  <ellipse cx="256" cy="210" rx="13" ry="25" fill="#fff"/>
+  <!-- Diya body -->
+  <ellipse cx="256" cy="290" rx="70" ry="28" fill="#fbbf24"/>
+  <ellipse cx="256" cy="300" rx="80" ry="22" fill="#f59e0b"/>
+  <path d="M176 295 Q256 330 336 295 L320 330 Q256 360 192 330 Z" fill="#d97706"/>
+  <!-- Book lines -->
+  <rect x="170" y="355" width="172" height="14" rx="7" fill="rgba(255,255,255,0.85)"/>
+  <rect x="185" y="378" width="142" height="10" rx="5" fill="rgba(255,255,255,0.6)"/>
+  <rect x="195" y="397" width="122" height="10" rx="5" fill="rgba(255,255,255,0.45)"/>
+  <!-- Stars -->
+  <text x="148" y="175" font-size="36" fill="#fef08a" opacity="0.9">✦</text>
+  <text x="328" y="165" font-size="28" fill="#fef08a" opacity="0.7">✦</text>
+  <text x="175" y="130" font-size="20" fill="#fff" opacity="0.5">✦</text>
+</svg>

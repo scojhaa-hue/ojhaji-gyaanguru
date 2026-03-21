@@ -1,0 +1,27 @@
+{
+  "name": "ओझा जी का GyaanGuru",
+  "short_name": "GyaanGuru",
+  "description": "AI शिक्षक — हर उत्तर की जाँच, हर कदम पर मार्गदर्शन",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#7c3500",
+  "theme_color": "#92400e",
+  "orientation": "portrait-primary",
+  "lang": "hi",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

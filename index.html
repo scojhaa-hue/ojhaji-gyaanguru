@@ -1,58 +1,611 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सतीश ओझा ज्ञानगुरु</title>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #b71c1c; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .app-container { width: 100%; max-width: 450px; height: 95vh; background: white; display: flex; flex-direction: column; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); overflow: hidden; }
-        .header { background: #d32f2f; color: white; padding: 20px; text-align: center; font-size: 22px; font-weight: bold; border-bottom: 4px solid #ffc107; }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #fffcfc; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 12px 16px; border-radius: 15px; font-size: 16px; line-height: 1.5; max-width: 80%; }
-        .guru { background: #fce4ec; color: #333; align-self: flex-start; border-left: 5px solid #d32f2f; }
-        .user { background: #d32f2f; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .footer { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
-        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
-        button { background: #d32f2f; color: white; border: none; padding: 0 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>ओझा जी का GyaanGuru</title>
+
+  <!-- PWA -->
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="GyaanGuru"/>
+  <meta name="theme-color" content="#92400e"/>
+  <meta name="description" content="ओझा जी का AI शिक्षक — हर उत्तर की जाँच"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon.png"/>
+  <link rel="icon" href="icon.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --saffron:#b45309;--saffron-dark:#92400e;--saffron-light:#d97706;
+      --gold:#f59e0b;--cream:#fffbf0;--white:#ffffff;
+      --text:#1f2937;--text2:#374151;--muted:#9ca3af;--border:#e5e7eb;
+    }
+
+    html,body{
+      height:100%;overflow:hidden;
+      background:#7c3500;
+      font-family:'Noto Sans Devanagari','Segoe UI',sans-serif;
+    }
+
+    #app{
+      max-width:430px;margin:0 auto;height:100vh;
+      background:var(--cream);display:flex;flex-direction:column;
+      overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,0.35);
+    }
+
+    /* ── HEADER ── */
+    .hdr{
+      background:linear-gradient(135deg,#7c3500 0%,#b45309 55%,#d97706 100%);
+      padding:14px 18px 20px;
+      border-radius:0 0 28px 28px;
+      box-shadow:0 6px 24px rgba(124,53,0,0.45);
+      flex-shrink:0;
+    }
+    .hdr-inner{display:flex;align-items:center;gap:13px}
+    .hdr-icon{
+      width:52px;height:52px;border-radius:15px;
+      background:rgba(255,255,255,0.18);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.8rem;flex-shrink:0;
+    }
+    .hdr-title{color:#fff;font-weight:800;font-size:1.12rem;line-height:1.25}
+    .hdr-sub{color:rgba(255,255,255,0.85);font-size:0.76rem;margin-top:3px}
+
+    /* ── SCROLL ── */
+    .scroll{
+      flex:1;overflow-y:auto;padding:16px 14px 16px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .scroll::-webkit-scrollbar{display:none}
+
+    /* ── CARDS ── */
+    .card{
+      background:#fff;border-radius:16px;
+      padding:14px 14px 16px;margin-bottom:14px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.07);
+    }
+    .card-title{font-weight:700;color:var(--text2);font-size:0.87rem;margin-bottom:10px}
+
+    /* ── SUBJECT GRID ── */
+    .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .sbtn{
+      padding:9px 2px;border-radius:11px;
+      border:2px solid var(--border);background:#fff;
+      cursor:pointer;font-size:0.67rem;font-weight:500;
+      color:var(--muted);display:flex;flex-direction:column;
+      align-items:center;gap:3px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.04);
+      transition:all .15s;font-family:inherit;
+    }
+    .sbtn .si{font-size:1.25rem}
+    .sbtn.on{border-color:var(--saffron);background:#fff3cd;color:var(--saffron-dark);font-weight:700;box-shadow:0 2px 8px rgba(180,83,9,0.2)}
+
+    /* ── GRADES ── */
+    .gwrap{display:flex;gap:7px;flex-wrap:wrap}
+    .gbtn{
+      padding:6px 12px;border-radius:20px;
+      border:2px solid var(--border);background:#fff;
+      color:var(--muted);font-weight:500;font-size:0.77rem;
+      cursor:pointer;transition:all .15s;font-family:inherit;
+    }
+    .gbtn.on{background:var(--saffron);border-color:var(--saffron);color:#fff;font-weight:700}
+
+    /* ── INPUTS ── */
+    input,textarea{
+      width:100%;padding:13px 14px;
+      border:2px solid var(--border);border-radius:12px;
+      font-size:0.92rem;background:#fdfdfd;
+      color:var(--text);font-family:inherit;
+      outline:none;transition:border-color .2s;
+    }
+    input:focus,textarea:focus{border-color:var(--saffron);background:#fff}
+    textarea{resize:vertical;line-height:1.6}
+
+    /* ── MODE TOGGLE ── */
+    .mtog{display:flex;gap:8px;margin-bottom:12px}
+    .mbtn{
+      flex:1;padding:10px 6px;border-radius:12px;
+      border:2px solid var(--border);background:#fff;
+      color:var(--muted);font-weight:500;font-size:0.8rem;
+      cursor:pointer;transition:all .15s;font-family:inherit;
+    }
+    .mbtn.on{border-color:var(--saffron);background:#fff3cd;color:var(--saffron-dark);font-weight:700}
+
+    /* ── UPLOAD ── */
+    .urow{display:flex;gap:8px;margin-bottom:10px}
+    .ubtn{
+      flex:1;padding:14px 6px;border-radius:12px;
+      border:2px dashed var(--saffron-light);background:var(--cream);
+      color:var(--saffron);font-weight:700;font-size:0.82rem;
+      cursor:pointer;display:flex;flex-direction:column;
+      align-items:center;gap:5px;font-family:inherit;transition:all .15s;
+    }
+    .ubtn:active{transform:scale(0.97)}
+    .ubtn .ui{font-size:1.7rem}
+    .ipreview{position:relative;margin-top:6px}
+    .ipreview img{width:100%;border-radius:12px;border:2px solid var(--gold);max-height:200px;object-fit:cover;display:block}
+    .iremove{
+      position:absolute;top:7px;right:7px;
+      background:#ef4444;color:#fff;border:none;
+      border-radius:50%;width:26px;height:26px;
+      cursor:pointer;font-size:.8rem;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .iok{margin-top:6px;padding:6px 10px;background:#f0fdf4;border-radius:8px;color:#15803d;font-size:.76rem;font-weight:600}
+
+    /* ── ERROR ── */
+    .errbox{
+      padding:11px 14px;background:#fef2f2;
+      border:1px solid #fca5a5;border-radius:12px;
+      color:#dc2626;font-size:.86rem;margin-bottom:12px;
+    }
+
+    /* ── SUBMIT ── */
+    .submbtn{
+      width:100%;padding:17px;
+      background:linear-gradient(135deg,#7c3500,#d97706);
+      color:#fff;border:none;border-radius:16px;
+      font-size:1.05rem;font-weight:800;cursor:pointer;
+      box-shadow:0 6px 20px rgba(124,53,0,0.38);
+      transition:all .2s;font-family:inherit;letter-spacing:.2px;
+    }
+    .submbtn:disabled{background:#d1d5db;box-shadow:none;cursor:not-allowed}
+    .submbtn:not(:disabled):active{transform:scale(0.98)}
+
+    /* ── LOADER ── */
+    .loader{text-align:center;margin-top:18px;color:var(--saffron)}
+    .loader .spin{font-size:2rem;display:inline-block;animation:spin 1s linear infinite}
+    .loader p{margin:8px 0 0;font-size:.84rem;font-weight:600}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── KEY SETUP BANNER ── */
+    .keybanner{
+      background:linear-gradient(135deg,#fef3c7,#fff8e1);
+      border:2px solid var(--gold);border-radius:14px;
+      padding:14px;margin-bottom:14px;
+    }
+    .keybanner p{font-size:.82rem;color:#92400e;margin-bottom:10px;font-weight:600;line-height:1.5}
+    .keyrow{display:flex;gap:8px}
+    .keyrow input{flex:1;font-size:.82rem;padding:10px 12px}
+    .keysave{
+      padding:10px 16px;background:var(--saffron);color:#fff;
+      border:none;border-radius:10px;font-weight:700;font-size:.82rem;
+      cursor:pointer;font-family:inherit;white-space:nowrap;
+    }
+    .keysave:active{transform:scale(0.97)}
+    .keyok{text-align:center;padding:10px;background:#f0fdf4;border-radius:10px;color:#15803d;font-weight:700;font-size:.85rem}
+
+    /* ── RESULT ── */
+    .rwrap{opacity:0;transform:translateY(20px);transition:all .5s ease}
+    .rwrap.show{opacity:1;transform:translateY(0)}
+    .rhdr{
+      background:linear-gradient(135deg,#7c3500,#b45309);
+      border-radius:16px 16px 0 0;padding:14px 16px;
+      display:flex;align-items:center;gap:10px;
+    }
+    .rhdr-icon{font-size:1.5rem}
+    .rhdr-title{color:#fff;font-weight:800;font-size:.96rem}
+    .rhdr-sub{color:rgba(255,255,255,.8);font-size:.72rem;margin-top:2px}
+    .scorerow{
+      background:#fffbf0;border-left:5px solid var(--gold);
+      padding:13px 16px;font-size:1.12rem;font-weight:800;color:var(--saffron-dark);
+    }
+    .rsec{padding:12px 16px;border-bottom:1px solid #f3f4f6}
+    .rsec-hd{font-weight:700;font-size:.9rem;margin-bottom:5px}
+    .rsec p{margin:3px 0;font-size:.86rem;line-height:1.65;color:var(--text2)}
+    .resetbtn{
+      width:100%;padding:14px;background:#fff;
+      color:var(--saffron);border:2px solid var(--saffron);border-top:none;
+      font-size:.96rem;font-weight:700;cursor:pointer;
+      border-radius:0 0 16px 16px;font-family:inherit;
+    }
+    .resetbtn:active{background:#fff3cd}
+    .qecho{margin-top:12px;padding:10px 13px;background:#f0fdf4;border-radius:12px;color:#15803d;font-size:.77rem}
+
+    /* ── BOTTOM NAV ── */
+    .bnav{
+      display:flex;background:#fff;
+      border-top:1px solid var(--border);
+      box-shadow:0 -4px 16px rgba(0,0,0,0.07);
+      flex-shrink:0;
+    }
+    .nbtn{
+      flex:1;padding:11px 0 9px;background:none;border:none;
+      cursor:pointer;display:flex;flex-direction:column;
+      align-items:center;gap:2px;font-family:inherit;
+      transition:opacity .15s;
+    }
+    .nbtn:disabled{opacity:.32;cursor:default}
+    .nbtn .ni{font-size:1.25rem}
+    .nbtn .nl{font-size:.69rem;font-weight:500;color:var(--muted)}
+    .nbtn.on .nl{color:var(--saffron);font-weight:700}
+    .nind{width:20px;height:3px;border-radius:2px;background:var(--saffron);margin-top:1px}
+
+    .foot{text-align:center;padding:6px;background:#fff;font-size:.65rem;color:#d1d5db}
+  </style>
 </head>
 <body>
-<div class="app-container">
-    <div class="header">सतीश ओझा ज्ञानगुरु</div>
-    <div id="chat-window">
-        <div class="msg guru"><b>सतीश जी:</b> खुश रहो बेटा! आज क्या जानना चाहते हो?</div>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-inner">
+      <div class="hdr-icon">🪔</div>
+      <div>
+        <div class="hdr-title">ओझा जी का GyaanGuru</div>
+        <div class="hdr-sub">AI शिक्षक • हर उत्तर की जाँच • हर कदम मार्गदर्शन</div>
+      </div>
     </div>
-    <div class="footer">
-        <input type="text" id="userInput" placeholder="यहाँ लिखें..." onkeypress="if(event.key==='Enter') send()">
-        <button onclick="send()">पूछें</button>
+  </div>
+
+  <!-- SCROLL -->
+  <div class="scroll" id="scroll">
+
+    <!-- HOME PAGE -->
+    <div id="homePage">
+
+      <!-- API KEY SETUP -->
+      <div class="keybanner" id="keyBanner">
+        <p>🔑 एक बार अपनी <strong>Google Gemini API Key</strong> डालें — फिर हमेशा के लिए save हो जाएगी!</p>
+        <div class="keyrow">
+          <input type="password" id="keyInput" placeholder="AIzaSy... यहाँ paste करें"/>
+          <button class="keysave" onclick="saveKey()">Save करें</button>
+        </div>
+      </div>
+      <div class="keyok" id="keyOk" style="display:none;margin-bottom:14px">
+        ✅ API Key Save है — गुरु जी तैयार हैं! &nbsp;<span onclick="resetKey()" style="cursor:pointer;text-decoration:underline;font-size:.75rem">बदलें?</span>
+      </div>
+
+      <!-- Subject -->
+      <div class="card">
+        <div class="card-title">📚 विषय चुनें</div>
+        <div class="sgrid" id="subjectGrid"></div>
+      </div>
+
+      <!-- Grade -->
+      <div class="card">
+        <div class="card-title">🎓 कक्षा चुनें</div>
+        <div class="gwrap" id="gradeWrap"></div>
+      </div>
+
+      <!-- Question -->
+      <div class="card">
+        <div class="card-title">❓ प्रश्न लिखें</div>
+        <input type="text" id="qInput" placeholder="जैसे: प्रकाश संश्लेषण क्या है?"/>
+      </div>
+
+      <!-- Answer -->
+      <div class="card">
+        <div class="card-title">✍️ उत्तर दें</div>
+        <div class="mtog">
+          <button class="mbtn on" id="mText" onclick="setMode('text')">⌨️ टाइप करें</button>
+          <button class="mbtn" id="mImage" onclick="setMode('image')">📷 फोटो अपलोड</button>
+        </div>
+        <div id="textArea">
+          <textarea id="aInput" rows="5" placeholder="अपना उत्तर यहाँ लिखें..."></textarea>
+        </div>
+        <div id="imageArea" style="display:none">
+          <div class="urow">
+            <button class="ubtn" onclick="document.getElementById('camIn').click()">
+              <span class="ui">📸</span>Camera से खींचें
+            </button>
+            <button class="ubtn" onclick="document.getElementById('galIn').click()">
+              <span class="ui">🖼️</span>Gallery से चुनें
+            </button>
+          </div>
+          <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="handleImg(this)"/>
+          <input type="file" id="galIn" accept="image/*" style="display:none" onchange="handleImg(this)"/>
+          <div id="imgWrap" style="display:none">
+            <div class="ipreview">
+              <img id="imgPrev" src="" alt="उत्तर"/>
+              <button class="iremove" onclick="removeImg()">✕</button>
+            </div>
+            <div class="iok">✅ फोटो तैयार है — गुरु जी पढ़ेंगे!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="errbox" id="errBox" style="display:none"></div>
+
+      <button class="submbtn" id="submitBtn" onclick="checkWithGuru()">✨ गुरु जी से जाँच कराएं</button>
+
+      <div class="loader" id="loader" style="display:none">
+        <span class="spin">🪔</span>
+        <p>ओझा जी आपका उत्तर परख रहे हैं...</p>
+      </div>
     </div>
-</div>
+
+    <!-- RESULT PAGE -->
+    <div id="resultPage" style="display:none">
+      <div class="rwrap" id="rWrap">
+        <div class="rhdr">
+          <span class="rhdr-icon">🪔</span>
+          <div>
+            <div class="rhdr-title">ओझा जी का मूल्यांकन</div>
+            <div class="rhdr-sub" id="rMeta"></div>
+          </div>
+        </div>
+        <div id="rBody"></div>
+        <button class="resetbtn" onclick="resetApp()">🔄 नया प्रश्न आज़माएं</button>
+        <div class="qecho" id="qEcho"></div>
+      </div>
+    </div>
+
+  </div><!-- end scroll -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <button class="nbtn on" id="navHome" onclick="goPage('home')">
+      <span class="ni">🏠</span><span class="nl">होम</span>
+      <div class="nind"></div>
+    </button>
+    <button class="nbtn" id="navResult" onclick="goPage('result')" disabled>
+      <span class="ni">📊</span><span class="nl">परिणाम</span>
+    </button>
+    <button class="nbtn" onclick="showAbout()">
+      <span class="ni">ℹ️</span><span class="nl">About</span>
+    </button>
+  </div>
+  <div class="foot">© 2026 ओझा जी का GyaanGuru AI 🙏</div>
+
+</div><!-- #app -->
+
 <script>
-    async function send() {
-        const input = document.getElementById('userInput');
-        const windowBox = document.getElementById('chat-window');
-        const text = input.value.trim();
-        if(!text) return;
-        windowBox.innerHTML += `<div class="msg user"><b>आप:</b> ${text}</div>`;
-        input.value = '';
-        const id = 'id' + Date.now();
-        windowBox.innerHTML += `<div class="msg guru" id="${id}"><i>सतीश जी विचार कर रहे हैं...</i></div>`;
-        windowBox.scrollTop = windowBox.scrollHeight;
-        try {
-            // हमने यहाँ URL को थोड़ा सुधारा है
-            const r = await fetch('https://gyaanguru-api.scojhaa.workers.dev/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
-            });
-            const d = await r.json();
-            document.getElementById(id).innerHTML = `<b>सतीश जी:</b> ${d.response || d.message || "प्रणाम! मैं आपकी सेवा में हाज़िर हूँ।"}`;
-        } catch (e) {
-            document.getElementById(id).innerHTML = "<b>सतीश जी:</b> तकनीकी समस्या है, लेकिन मैं जल्द ही आपसे जुड़ूँगा।";
-        }
-        windowBox.scrollTop = windowBox.scrollHeight;
+// ════════════════════════════════
+//  CONFIG — यहाँ अपनी key डालें
+//  (या app में डालकर Save करें)
+// ════════════════════════════════
+const HARDCODED_KEY = ""; // optional: यहाँ key लिख सकते हैं
+
+const SUBJECTS=[
+  {id:"science",label:"विज्ञान",icon:"🔬"},
+  {id:"math",label:"गणित",icon:"📐"},
+  {id:"hindi",label:"हिंदी",icon:"📖"},
+  {id:"history",label:"इतिहास",icon:"🏛️"},
+  {id:"geography",label:"भूगोल",icon:"🌍"},
+  {id:"english",label:"English",icon:"🔤"},
+  {id:"civics",label:"नागरिक शास्त्र",icon:"⚖️"},
+  {id:"general",label:"सामान्य ज्ञान",icon:"💡"},
+];
+const GRADES=["6","7","8","9","10","11","12","प्रतियोगिता"];
+
+let selSubj="general", selGrade="10", mode="text", imgBase64=null;
+
+// ── KEY ──
+function getKey(){return HARDCODED_KEY||localStorage.getItem('gg_key')||''}
+function saveKey(){
+  const k=document.getElementById('keyInput').value.trim();
+  if(!k){alert('Key खाली है!');return;}
+  localStorage.setItem('gg_key',k);
+  showKeyStatus();
+}
+function resetKey(){localStorage.removeItem('gg_key');showKeyStatus();}
+function showKeyStatus(){
+  const k=getKey();
+  document.getElementById('keyBanner').style.display=k?'none':'block';
+  document.getElementById('keyOk').style.display=k?'block':'none';
+}
+
+// ── BUILD SUBJECTS ──
+function buildSubjects(){
+  const g=document.getElementById('subjectGrid');
+  SUBJECTS.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='sbtn'+(s.id===selSubj?' on':'');
+    b.innerHTML=`<span class="si">${s.icon}</span>${s.label}`;
+    b.onclick=()=>{
+      selSubj=s.id;
+      document.querySelectorAll('.sbtn').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+    };
+    g.appendChild(b);
+  });
+}
+
+// ── BUILD GRADES ──
+function buildGrades(){
+  const w=document.getElementById('gradeWrap');
+  GRADES.forEach(g=>{
+    const b=document.createElement('button');
+    b.className='gbtn'+(g===selGrade?' on':'');
+    b.textContent=g==="प्रतियोगिता"?"🏆 प्रतियोगिता":"Class "+g;
+    b.onclick=()=>{
+      selGrade=g;
+      document.querySelectorAll('.gbtn').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+    };
+    w.appendChild(b);
+  });
+}
+
+// ── MODE ──
+function setMode(m){
+  mode=m;
+  document.getElementById('mText').classList.toggle('on',m==='text');
+  document.getElementById('mImage').classList.toggle('on',m==='image');
+  document.getElementById('textArea').style.display=m==='text'?'block':'none';
+  document.getElementById('imageArea').style.display=m==='image'?'block':'none';
+}
+
+// ── IMAGE ──
+function handleImg(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    imgBase64=e.target.result.split(',')[1];
+    document.getElementById('imgPrev').src=e.target.result;
+    document.getElementById('imgWrap').style.display='block';
+  };
+  r.readAsDataURL(f);
+}
+function removeImg(){
+  imgBase64=null;
+  document.getElementById('imgWrap').style.display='none';
+  document.getElementById('imgPrev').src='';
+  document.getElementById('camIn').value='';
+  document.getElementById('galIn').value='';
+}
+
+// ── MAIN API CALL ──
+async function checkWithGuru(){
+  const key=getKey();
+  if(!key){showErr("पहले API Key save करें! ऊपर yellow box में डालें 🔑");return;}
+
+  const q=document.getElementById('qInput').value.trim();
+  const a=document.getElementById('aInput').value.trim();
+  hideErr();
+
+  if(!q){showErr("प्रश्न लिखना ज़रूरी है! 🙏");return;}
+  if(mode==='text'&&!a){showErr("उत्तर लिखें या फोटो अपलोड करें! 🙏");return;}
+  if(mode==='image'&&!imgBase64){showErr("कृपया उत्तर की फोटो अपलोड करें! 🙏");return;}
+
+  const subj=SUBJECTS.find(s=>s.id===selSubj);
+  document.getElementById('submitBtn').disabled=true;
+  document.getElementById('loader').style.display='block';
+
+  const prompt=`आप "ओझा जी" हैं — एक प्रेमपूर्ण, ज्ञानी हिंदी गुरु। छात्रों के उत्तरों की जाँच करें।
+हमेशा हिंदी में जवाब दें।
+
+विषय: ${subj.label}
+कक्षा: ${selGrade}
+प्रश्न: ${q}
+${mode==='text'?'छात्र का उत्तर: '+a:'छात्र ने कागज़ पर लिखकर उत्तर दिया है (image देखें)।'}
+
+उत्तर इस format में दें:
+
+⭐ अंक: X/10
+
+✅ क्या सही किया:
+[सही बातें]
+
+📝 क्या सुधार होना चाहिए:
+[कमियाँ]
+
+💡 सही/पूरा उत्तर:
+[${subj.label}, Class ${selGrade} स्तर पर सही उत्तर]
+
+🌟 गुरु जी का संदेश:
+[एक प्रेरणादायक वाक्य]`;
+
+  // Build Gemini request parts
+  let parts;
+  if(mode==='image'&&imgBase64){
+    parts=[
+      {inline_data:{mime_type:"image/jpeg",data:imgBase64}},
+      {text:prompt}
+    ];
+  } else {
+    parts=[{text:prompt}];
+  }
+
+  try{
+    const res=await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+      {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{parts}]})
+      }
+    );
+    const data=await res.json();
+    if(data.error){
+      showErr("API Error: "+data.error.message);
+      return;
     }
+    const text=data.candidates?.[0]?.content?.parts?.[0]?.text||"";
+    showResult(text,q,subj,selGrade);
+  }catch(e){
+    showErr("नेटवर्क में समस्या। Internet check करें और दोबारा try करें। 🙏");
+  }finally{
+    document.getElementById('submitBtn').disabled=false;
+    document.getElementById('loader').style.display='none';
+  }
+}
+
+// ── PARSE & SHOW RESULT ──
+const SCOLS={
+  "✅":{bg:"#f0fdf4",bdr:"#22c55e",hd:"#15803d"},
+  "📝":{bg:"#fff7ed",bdr:"#f97316",hd:"#c2410c"},
+  "💡":{bg:"#eff6ff",bdr:"#3b82f6",hd:"#1d4ed8"},
+  "🌟":{bg:"#fefce8",bdr:"#eab308",hd:"#854d0e"},
+};
+
+function showResult(text,q,subj,grade){
+  const lines=text.split('\n');
+  let html='',inSec=false;
+  lines.forEach(raw=>{
+    const l=raw.trim(); if(!l) return;
+    if(l.startsWith('⭐')){
+      if(inSec){html+='</div>';inSec=false;}
+      html+=`<div class="scorerow">${l}</div>`;
+    } else if(['✅','📝','💡','🌟'].some(e=>l.startsWith(e))){
+      if(inSec) html+='</div>';
+      const c=SCOLS[l[0]]||{bg:'#f9fafb',bdr:'#9ca3af',hd:'#374151'};
+      html+=`<div class="rsec" style="background:${c.bg};border-left:4px solid ${c.bdr}">`;
+      html+=`<div class="rsec-hd" style="color:${c.hd}">${l}</div>`;
+      inSec=true;
+    } else if(inSec){
+      html+=`<p>${l}</p>`;
+    }
+  });
+  if(inSec) html+='</div>';
+
+  document.getElementById('rBody').innerHTML=html;
+  document.getElementById('rMeta').textContent=`${subj.icon} ${subj.label} • Class ${grade}`;
+  document.getElementById('qEcho').innerHTML=`💬 प्रश्न: <em>${q}</em>`;
+  document.getElementById('navResult').disabled=false;
+  goPage('result');
+  setTimeout(()=>document.getElementById('rWrap').classList.add('show'),60);
+}
+
+// ── PAGES ──
+function goPage(p){
+  document.getElementById('homePage').style.display=p==='home'?'block':'none';
+  document.getElementById('resultPage').style.display=p==='result'?'block':'none';
+  ['navHome','navResult'].forEach(id=>{
+    const btn=document.getElementById(id);
+    const isActive=(id==='navHome'&&p==='home')||(id==='navResult'&&p==='result');
+    btn.classList.toggle('on',isActive);
+    let ind=btn.querySelector('.nind');
+    if(isActive&&!ind){ind=document.createElement('div');ind.className='nind';btn.appendChild(ind);}
+    if(!isActive&&ind) ind.remove();
+  });
+  document.getElementById('scroll').scrollTop=0;
+}
+
+function showErr(m){const b=document.getElementById('errBox');b.textContent=m;b.style.display='block';}
+function hideErr(){document.getElementById('errBox').style.display='none';}
+
+function resetApp(){
+  document.getElementById('qInput').value='';
+  document.getElementById('aInput').value='';
+  removeImg();setMode('text');hideErr();
+  document.getElementById('rWrap').classList.remove('show');
+  document.getElementById('navResult').disabled=true;
+  goPage('home');
+}
+
+function showAbout(){
+  alert('🪔 ओझा जी का GyaanGuru\n\nVersion: 2.0 PWA\nनिर्माता: Satish Chandra Ojha\n\nAI शिक्षक — हर उत्तर की जाँच\nकक्षा 6 से प्रतियोगिता परीक्षा तक\n\nPowered by Google Gemini AI');
+}
+
+// ── INIT ──
+buildSubjects();
+buildGrades();
+showKeyStatus();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>

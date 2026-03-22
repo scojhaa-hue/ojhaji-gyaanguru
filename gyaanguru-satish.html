@@ -173,8 +173,7 @@ textarea.inp{resize:vertical;line-height:1.6;min-height:100px}
 </div>
 
 <script>
-const API = "https://api.anthropic.com/v1/messages";
-const MDL = "claude-sonnet-4-20250514";
+// Gemini API used
 let lang = 'hi', mode = 'text', imgB64 = null;
 
 const SC = {
@@ -271,20 +270,37 @@ async function check() {
     content = ctx;
   }
 
+  // Gemini API key - localStorage में save होगी
+  let apiKey = localStorage.getItem('gg_key') || '';
+  if (!apiKey) {
+    apiKey = prompt('अपनी Gemini API Key डालें (aistudio.google.com/apikey से लें):');
+    if (!apiKey) { document.getElementById('sBtn').disabled = false; document.getElementById('lB').style.display = 'none'; return; }
+    localStorage.setItem('gg_key', apiKey);
+  }
+
+  const prompt_text = sys + '\n' + ctx;
+  let parts;
+  if (mode === 'image' && imgB64) {
+    parts = [{inline_data:{mime_type:"image/jpeg",data:imgB64}},{text:prompt_text}];
+  } else {
+    parts = [{text:prompt_text}];
+  }
+
   try {
-    const res = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: MDL,
-        max_tokens: 1000,
-        system: sys,
-        messages: [{ role: "user", content }]
-      })
-    });
+    const res = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + apiKey,
+      {method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({contents:[{parts}]})}
+    );
     const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    const txt = data.content?.map(c => c.text || '').join('\n') || '';
+    if (data.error) {
+      if (data.error.code === 429 || data.error.message.includes('quota')) {
+        localStorage.removeItem('gg_key');
+        throw new Error('Quota खत्म! कल फिर try करें या नई key बनाएं।');
+      }
+      throw new Error(data.error.message);
+    }
+    const txt = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     renderResult(txt, q, subj, grade);
   } catch (e) {
     eB.textContent = (hi ? 'समस्या: ' : 'Error: ') + e.message;
